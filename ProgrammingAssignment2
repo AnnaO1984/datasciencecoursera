@@ -1,0 +1,39 @@
+# makeCacheMatrix is a function which purpose it is to store the inverse value of a given
+# matrix. This saves time in entering and recalculating a given matrix over and over again when needed.
+# makeCacheMatrix is a function that performs a list of operations, containing the following functions:
+# - setMatrix      set the value of a matrix
+# - getMatrix      get the value of a set matrix
+# - cacheSolve     make the inverted matrix
+# - getInverse     get the cached value, if value did not change
+
+makeCacheMatrix <- function(x = numeric()) {
+  
+  # holds the cached value or NULL if nothing is cached
+  # initially nothing is cached so set it to NULL
+  cache <- NULL
+  
+  # store a matrix
+  setMatrix <- function(newMatrix) {
+    x <<- newMatrix
+    # since the matrix is newly stored, wipe the previously stored value
+    cache <<- NULL
+  }
+  
+  # returns the given matrix
+  getMatrix <- function() {
+    return(x)
+  }
+  
+  # solves the returned matrix 
+  cacheSolve <- function(solve) {
+    cache <<- solve(x)
+  }
+  
+  # get the cached value
+  getInverse <- function() {
+    return(cache)
+  }
+  
+  # return a list. Each named element of the list is a function
+  list(setMatrix = setMatrix, getMatrix = getMatrix, cacheSolve = cacheSolve, getInverse = getInverse)
+}
