@@ -1,39 +1,67 @@
 # makeCacheMatrix is a function which purpose it is to store the inverse value of a given
 # matrix. This saves time in entering and recalculating a given matrix over and over again when needed.
 # makeCacheMatrix is a function that performs a list of operations, containing the following functions:
-# - setMatrix      set the value of a matrix
-# - getMatrix      get the value of a set matrix
-# - cacheSolve     make the inverted matrix
-# - getInverse     get the cached value, if value did not change
+# - set            sets the value of a matrix
+# - get            gets the value of a set matrix
+# - getMatrix      temporarily stores the given matrix
+# - getMatrix      returns the values of given matrix
 
-makeCacheMatrix <- function(x = numeric()) {
+makeCacheMatrix <- function(x = matrix()) {
   
-  # holds the cached value or NULL if nothing is cached
-  # initially nothing is cached so set it to NULL
+  # Holds the cached value, if nothing is cached, value is NULL
+ 
   cache <- NULL
   
-  # store a matrix
-  setMatrix <- function(newMatrix) {
-    x <<- newMatrix
-    # since the matrix is newly stored, wipe the previously stored value
-    cache <<- NULL
+  # set a matrix, y being the input matrix stored in x.
+  
+  set <- function(y) {
+   
+    # stores the input into x object, makes sure cache is reset to null, because we do not want 
+    # the old matrix to show up.
+    
+    x <<- y
+    cache <<-NULL
   }
   
-  # returns the given matrix
-  getMatrix <- function() {
+  # Returns the given matrix.
+  get <- function() {
     return(x)
   }
-  
-  # solves the returned matrix 
-  cacheSolve <- function(solve) {
-    cache <<- solve(x)
+  # Sets the cache to current solved matrix.
+  setMatrix <- function(solve){
+    cache<<-solve(x)
   }
-  
-  # get the cached value
-  getInverse <- function() {
+  # Returns the current, solved matrix from cache.
+  getMatrix <- function(){
     return(cache)
   }
   
-  # return a list. Each named element of the list is a function
-  list(setMatrix = setMatrix, getMatrix = getMatrix, cacheSolve = cacheSolve, getInverse = getInverse)
+  # Attempts to solves the cached matrix, but since there is nothing in cache yet, it does not store anyt values.
+  # Cache will still be NULL.
+  
+  cacheSolve <- function(solve) {
+    cache <<- solve
+  }
+  # Sets the functions listed in the makeCacheMatrix function to be operational.
+  list(set=set, get=get, setMatrix=setMatrix,getMatrix=getMatrix)
 }
+
+cacheSolve <- function(x,...){
+  cache <- x$getMatrix()
+    if(!is.null(cache)){
+      message("Getting cached matrix!")
+      
+      # In our case the above message is never shown since the value of cache is always set to 
+      # NULL when assigning the inputted matrix to object x.
+      
+      return(cache)
+    }
+  message("Oops! Something went wrong with storing your inverted matrix! Hold on please while I calculate the cache version.")
+  data <- matrix(x$get())
+  cache <- solve(data)
+  x$setMatrix(cache)
+  
+  
+}
+  
+
